@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@prisma/client": "^6.19.3",
     "dotenv": "^17.2.3",
     "next": "^16.2.6",
