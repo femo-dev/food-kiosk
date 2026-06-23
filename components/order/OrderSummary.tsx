@@ -3,15 +3,21 @@ import { useMemo } from "react";
 import { useStore } from "@/src/store";
 import ProductDetails from "./ProductDetails";
 import { formatCurrency } from "@/src/utils";
+import { createOrder } from "@/actions/create-order-action";
 
 export default function OrderSummary() {
   const order = useStore((state) => state.order);
   const total = useMemo(() => order.reduce((total, item) => total + item.subtotal, 0), [order]);
+
+  const handleCreateOrder = () => {
+    createOrder();
+  };
+
   return (
     <aside className="md:h-screen md:overflow-y-scroll md:w-64 lg:w-96 p-5">
       <h1 className="text-4xl text-center font-black">My Order</h1>
 
-      {order.length === 0 ? <p className="text-center my-10">The cart is empty</p> : (
+      {order.length === 0 ? <p className="text-center my-10">The order is empty</p> : (
         <div className="mt-5">
           {order.map((item) => (
             <ProductDetails 
@@ -25,6 +31,17 @@ export default function OrderSummary() {
               {formatCurrency(total)}
             </span>
           </p>
+
+          <form 
+            className="w-full mt-10 space-y-5"
+            action={handleCreateOrder}
+          >
+            <input
+              type="submit"
+              className="py-2 rounded uppercase text-white bg-black w-full text-center cursor-pointer font-bold"
+              value="Confirm Order"
+            />
+          </form>
         </div>
       )}
     </aside>
