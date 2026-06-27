@@ -1,15 +1,31 @@
 "use client";
 import { useMemo } from "react";
+import { toast } from "react-toastify";
 import { useStore } from "@/src/store";
 import ProductDetails from "./ProductDetails";
 import { formatCurrency } from "@/src/utils";
 import { createOrder } from "@/actions/create-order-action";
+import { OrderSchema } from "@/src/schema";
 
 export default function OrderSummary() {
   const order = useStore((state) => state.order);
   const total = useMemo(() => order.reduce((total, item) => total + item.subtotal, 0), [order]);
 
-  const handleCreateOrder = () => {
+  const handleCreateOrder = (formData: FormData) => {
+    const data = {
+      name: formData.get('name') as string
+    };
+
+    const result = OrderSchema.safeParse(data);
+
+    if (!result.success) {
+      result.error.issues.forEach((issue) => {
+        toast.error(issue.message);
+      });
+
+      return;
+    }
+
     createOrder();
   };
 
@@ -36,6 +52,12 @@ export default function OrderSummary() {
             className="w-full mt-10 space-y-5"
             action={handleCreateOrder}
           >
+            <input 
+              type="text"
+              placeholder="Your Name"
+              className="w-full border border-gray-100 p-2"
+              name="name"
+            />
             <input
               type="submit"
               className="py-2 rounded uppercase text-white bg-black w-full text-center cursor-pointer font-bold"
