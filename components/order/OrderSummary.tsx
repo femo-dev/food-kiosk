@@ -11,7 +11,7 @@ export default function OrderSummary() {
   const order = useStore((state) => state.order);
   const total = useMemo(() => order.reduce((total, item) => total + item.subtotal, 0), [order]);
 
-  const handleCreateOrder = (formData: FormData) => {
+  const handleCreateOrder = async (formData: FormData) => {
     const data = {
       name: formData.get('name') as string,
       total,
@@ -28,8 +28,14 @@ export default function OrderSummary() {
       return;
     }
 
-    createOrder();
-  };
+    const response = await createOrder(data);
+
+    if (response?.errors) {
+      response.errors.forEach((issue) => {
+        toast.error(issue.message);
+     });
+    }
+  }
 
   return (
     <aside className="md:h-screen md:overflow-y-scroll md:w-64 lg:w-96 p-5">
