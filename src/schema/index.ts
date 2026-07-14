@@ -25,3 +25,19 @@ export const SearchSchema = z.object({
     .trim()
     .min(1, { message: 'The search cannot be empty' })
 })
+
+export const ProductSchema = z.object({
+    name: z.string()
+        .trim()
+        .min(1, { message: 'The product name cannot be empty' }),
+    price: z.string()
+        .trim()
+        .transform((value) => parseFloat(value)) 
+        .refine((value) => value > 0, { message: 'The price is not valid' })
+        .or(z.number().min(1, {message: 'The category is required' })),
+    categoryId: z.string()
+        .trim()
+        .transform((value) => parseInt(value)) 
+        .refine((value) => value > 0, { message: 'The category is required' })
+        .or(z.number().min(1, {message: 'The category is required' })),
+})
