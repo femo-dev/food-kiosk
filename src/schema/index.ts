@@ -12,19 +12,19 @@ export const OrderSchema = z.object({
     quantity: z.number(),
     subtotal: z.number() 
     }))
-})
+});
 
 export const OrderIdSchema = z.object({
   orderId: z.string()
     .transform((value) => parseInt(value))
     .refine(value => value > 0, { message: 'There is an error with the order ID' })
-})
+});
 
 export const SearchSchema = z.object({
   search: z.string()
     .trim()
     .min(1, { message: 'The search cannot be empty' })
-})
+});
 
 export const ProductSchema = z.object({
     name: z.string()
@@ -40,4 +40,6 @@ export const ProductSchema = z.object({
         .transform((value) => parseInt(value)) 
         .refine((value) => value > 0, { message: 'The category is required' })
         .or(z.number().min(1, {message: 'The category is required' })),
-})
+    image: z.string()
+        .min(1, { message: 'The image is required' })
+});
