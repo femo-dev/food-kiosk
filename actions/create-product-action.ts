@@ -11,7 +11,9 @@ export async function createProduct(data: unknown) {
       errors: result.error.issues
     }
   }
+
   console.log(">>>> Creating product with data:", result.data);
+  
   await prisma.product.create({
     data: result.data
   });
